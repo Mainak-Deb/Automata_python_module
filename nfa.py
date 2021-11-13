@@ -61,8 +61,9 @@ class NFA:
         while(len(closure)>0):
             if(len(self.__graph[closure[0]][self.__alphabets.index(None)])!=0):
                 for i in self.__graph[closure[0]][self.__alphabets.index(None)]:
-                    closure.append(i)
-                    ans.append(i)
+                    if(i not in ans):
+                        closure.append(i)
+                        ans.append(i)
             closure.pop(0)
         #print(ans)
         return ans
@@ -71,8 +72,8 @@ class NFA:
     def toDFA(self):
         DFAgraph=[]
 
-        DFAstate=[[0]]
-        DFAqueue=[[0]]
+        DFAstate=[self.efsilon_closure([0])]
+        DFAqueue=[self.efsilon_closure([0])]
         DFAcount=0;    
 
         alpl=len(self.__alphabets)
@@ -89,49 +90,60 @@ class NFA:
                         efcl=self.efsilon_closure(DFAqueue[0])
                     else:
                         efcl=DFAqueue[0]
+                    #print("efcl: ",efcl)
                     nextstep=[]
                     for j in range(len(efcl)):
+                        #print("moveto: ",efcl[j],self.__alphabets[i],self.__graph[efcl[j]][i])
                         movepos=self.__graph[efcl[j]][i]
                         if(len(movepos)!=0):
                             for k in movepos:
                                 if(k not in nextstep):nextstep.append(k)
                         # print(movepos)
+                    nextstep=self.efsilon_closure(nextstep)
                     nextstep.sort();
+                    print(efcl,f"->{self.__alphabets[i]}->",nextstep)
 
                     if(nextstep not in DFAstate):
+                        print(DFAcount,f"->{self.__alphabets[i]}->",len(DFAstate))
                         DFAgraph[DFAcount][i]=len(DFAstate)
+                        
                         DFAstate.append(nextstep)
                         DFAqueue.append(nextstep)
                     else:
+                        print(DFAcount,f"->{self.__alphabets[i]}->",DFAstate.index(nextstep))
                         DFAgraph[DFAcount][i]=DFAstate.index(nextstep)
+                    print(DFAgraph)
             DFAcount+=1;
             
-
-            # print(DFAstate)
+        
+            #print(DFAstate)
             #print(DFAgraph)
 
             DFAqueue.pop(0)
 
         # print(DFAgraph)
-        # print(DFAstate)
+        print("DFAstate: ",DFAstate)
 
         alphabets=[i for i in self.__alphabets]
 
         if(None in alphabets):
             alphabets.remove(None)
+        print(self.__final)
         b=DFA(DFAcount+1,self.__alphabets)
 
         for i in range(len(DFAgraph)):
             for j in range(len(DFAgraph[0])):
                 if(DFAgraph[i][j]!=-1):
+                    print(i,self.__alphabets[j],DFAgraph[i][j])
                     b.connect(i,self.__alphabets[j],DFAgraph[i][j])
 
         DFAfinal=[]    
-        
+        # print(DFAgraph)
         for i in DFAstate:
+            print(i)
             for j in self.__final:
                 if(j in i):DFAfinal.append(DFAstate.index(i))
-        
+        print("DFAfinal ",DFAfinal)
         b.finalStates(DFAfinal)
        
         return b;
@@ -143,6 +155,7 @@ class NFA:
 
     def examine(self,pattern):
         exam=self.toDFA()
+        exam.printDFA()
         return exam.examine(pattern)
    
 
@@ -161,27 +174,43 @@ if __name__=="__main__" :
     # b.connect(1,'a',2)
 
     # b.connect(2,'b',3)
-    b.connect(0,None,1)
-    b.connect(1,None,2)
-    b.connect(1,None,4)
-    b.connect(1,None,7)
+    # b.connect(0,None,1)
+    # b.connect(1,None,2)
+    # b.connect(1,None,4)
+    # b.connect(1,None,7)
+    # b.connect(2,'a',3)
+    # b.connect(4,'b',5)
+    # b.connect(3,None,6)
+    # b.connect(5,None,6)
+    # b.connect(6,None,7)
+    # b.connect(6,None,1)
+    # b.connect(7,'a',8)
+
+
+
+
+
+
+
+
+
+
+    # b.connect(8,'b',9)
+    # b.connect(9,'b',10)
+    b.connect(0,None,2)
+    b.connect(0,None,2)
     b.connect(2,'a',3)
     b.connect(4,'b',5)
-    b.connect(3,None,6)
-    b.connect(5,None,6)
-    b.connect(6,None,7)
-    b.connect(6,None,1)
-    b.connect(7,'a',8)
-    b.connect(8,'b',9)
-    b.connect(9,'b',10)
-    
+    b.connect(3,None,1)
+    b.connect(5,None,1)
 
-    b.finalStates([10])
+
+    b.finalStates([1])
     b.printNFA()
 
     b.toDFA();
 
-    print(b.examine("aabb"))
+    print(b.examine("b"))
    
 
 

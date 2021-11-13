@@ -21,7 +21,7 @@ class DFA:
 
 
     def connect(self,st1,alph,st2):
-        self.__graph[st1-1][self.__alphabets.index(alph)]=st2-1;
+        self.__graph[st1][self.__alphabets.index(alph)]=st2;
 
 
 
@@ -29,19 +29,21 @@ class DFA:
         self.__final =final
 
     def printDFA(self):
-        #print(self.__graph)
+        print(self.__graph)
+        print(self.__final)
+        print(self.__states) 
         for i in range(self.__states):
             for j in range(len(self.__graph[i])):
                 if(self.__graph[i][j]!=-1):
-                    if((i+1) in self.__final):
-                        state_to=f"(({i+1}))"
+                    if(i in self.__final):
+                        state_to=f"(({i}))"
                     else:
-                        state_to=f" ({i+1}) "
+                        state_to=f" ({i}) "
                     
-                    if((self.__graph[i][j]+1) in self.__final):
-                        state_from=f"(({self.__graph[i][j]+1}))"
+                    if((self.__graph[i][j]) in self.__final):
+                        state_from=f"(({self.__graph[i][j]}))"
                     else:
-                        state_from=f" ({self.__graph[i][j]+1}) "
+                        state_from=f" ({self.__graph[i][j]}) "
 
                     print(state_to+ f"  ->{self.__alphabets[j]}-> "+ state_from)
     
@@ -51,7 +53,7 @@ class DFA:
             if(i not in self.__alphabets):return False
             current_state=self.__graph[current_state][self.__alphabets.index(i)]
             #print(i," -> ",current_state+1)
-        if(current_state+1 in self.__final):
+        if(current_state in self.__final):
             return True
         return False
    
@@ -74,7 +76,7 @@ if __name__=="__main__" :
     # print(a.examine("abbababbababababbababab"))
 
 
-    b=DFA(4,['a','b'])
+    b=DFA(5,['a','b'])
 
     b.connect(1,'a',2)
     b.connect(1,'b',4)
