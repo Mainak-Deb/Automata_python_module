@@ -36,7 +36,7 @@ class NFA:
         self.__final =final
 
     def printNFA(self):
-        print(self.__graph)
+        # print(self.__graph)
         
         for i in range(self.__states):
             for j in range(len(self.__graph[i])):
@@ -51,8 +51,10 @@ class NFA:
                             state_from=f"(({self.__graph[i][j][k]}))"
                         else:
                             state_from=f" ({self.__graph[i][j][k]}) "
-
-                        print(state_to+ f"  ->{self.__alphabets[j]}-> "+ state_from)
+                        if(self.__alphabets[j]==None):
+                            print(state_to+ f"  -> ε -> "+ state_from)
+                        else:
+                            print(state_to+ f"  -> {self.__alphabets[j]} -> "+ state_from)
 
 
     def efsilon_closure(self,n):   
@@ -101,18 +103,18 @@ class NFA:
                         # print(movepos)
                     nextstep=self.efsilon_closure(nextstep)
                     nextstep.sort();
-                    print(efcl,f"->{self.__alphabets[i]}->",nextstep)
+                    # print(efcl,f"->{self.__alphabets[i]}->",nextstep)
 
                     if(nextstep not in DFAstate):
-                        print(DFAcount,f"->{self.__alphabets[i]}->",len(DFAstate))
+                        # print(DFAcount,f"->{self.__alphabets[i]}->",len(DFAstate))
                         DFAgraph[DFAcount][i]=len(DFAstate)
                         
                         DFAstate.append(nextstep)
                         DFAqueue.append(nextstep)
                     else:
-                        print(DFAcount,f"->{self.__alphabets[i]}->",DFAstate.index(nextstep))
+                        # print(DFAcount,f"->{self.__alphabets[i]}->",DFAstate.index(nextstep))
                         DFAgraph[DFAcount][i]=DFAstate.index(nextstep)
-                    print(DFAgraph)
+                    # print(DFAgraph)
             DFAcount+=1;
             
         
@@ -122,40 +124,42 @@ class NFA:
             DFAqueue.pop(0)
 
         # print(DFAgraph)
-        print("DFAstate: ",DFAstate)
+        #print("DFAstate: ",DFAstate)
 
         alphabets=[i for i in self.__alphabets]
 
         if(None in alphabets):
             alphabets.remove(None)
-        print(self.__final)
+        # print(self.__final)
         b=DFA(DFAcount+1,self.__alphabets)
 
         for i in range(len(DFAgraph)):
             for j in range(len(DFAgraph[0])):
                 if(DFAgraph[i][j]!=-1):
-                    print(i,self.__alphabets[j],DFAgraph[i][j])
+                    # print(i,self.__alphabets[j],DFAgraph[i][j])
                     b.connect(i,self.__alphabets[j],DFAgraph[i][j])
 
         DFAfinal=[]    
         # print(DFAgraph)
         for i in DFAstate:
-            print(i)
+            # print(i)
             for j in self.__final:
                 if(j in i):DFAfinal.append(DFAstate.index(i))
-        print("DFAfinal ",DFAfinal)
+        # print("DFAfinal ",DFAfinal)
         b.finalStates(DFAfinal)
        
         return b;
 
-
+    def printDFA(self):
+        exam=self.toDFA()
+        exam.printDFA()
 
 
 
 
     def examine(self,pattern):
         exam=self.toDFA()
-        exam.printDFA()
+        #exam.printDFA()
         return exam.examine(pattern)
    
 

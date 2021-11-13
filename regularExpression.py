@@ -36,7 +36,7 @@ class regularExpression:
         self.interchange()
         self.alphaStore()
         self.modify()
-        self.create_nfa()
+        
         pass
 
     def interchange(self):
@@ -116,8 +116,6 @@ class regularExpression:
         return final_arr
         
 
-
-
     def modify(self):
         self.__mpat=""
         for i in range(len(self.__patern)):
@@ -152,8 +150,6 @@ class regularExpression:
         self.__nfa_states+=2;
         self.__nfa_queue=[self.__mpat]
         
-
-    
 
     def create_nfa(self):
         # split_arr=self.divide(self.__nfa_queue[0])
@@ -220,12 +216,25 @@ class regularExpression:
                     self.__nfa.connect(states,self.__alphabets[i],j)
         
         self.__nfa.finalStates([1])
-        self.__nfa.printNFA()
+        #self.__nfa.printNFA()
 
         #self.__nfa.toDFA();
 
-        print(self.__nfa.examine("b"))
-            
+        #print(self.__nfa.examine("bababbabacdd"))
+
+
+    def printNFA(self):
+        self.create_nfa()
+        self.__nfa.printNFA()
+
+    def printDFA(self):
+        self.create_nfa()
+        self.__nfa.printDFA()
+
+
+    def examine(self,pattern):
+        self.create_nfa()
+        return self.__nfa.examine(pattern)
 
 
 
@@ -233,10 +242,9 @@ class regularExpression:
 
 if __name__=="__main__":
     clearConsole()
-    #r=regularExpression("(ab)*|((a|ab)*b*(a|b)*)")
-    #r=regularExpression("(a*|b)*a(a+b)*")
-    #r=regularExpression("(a|b|c)*abc")
-    r=regularExpression("a|b")
-    
+    r=regularExpression("(el)*(if|se)")
+    # r.printNFA()
+    # r.printDFA()
+    print(r.examine("elelelelse"))
     #r=regularExpression("((ab)*)")
 

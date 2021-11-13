@@ -29,9 +29,6 @@ class DFA:
         self.__final =final
 
     def printDFA(self):
-        print(self.__graph)
-        print(self.__final)
-        print(self.__states) 
         for i in range(self.__states):
             for j in range(len(self.__graph[i])):
                 if(self.__graph[i][j]!=-1):
@@ -45,7 +42,7 @@ class DFA:
                     else:
                         state_from=f" ({self.__graph[i][j]}) "
 
-                    print(state_to+ f"  ->{self.__alphabets[j]}-> "+ state_from)
+                    print(state_to+ f"  -> {self.__alphabets[j]} -> "+ state_from)
     
     def examine(self,pattern):
         current_state = 0
