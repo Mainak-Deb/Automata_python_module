@@ -57,6 +57,7 @@ class regularExpression:
             and (self.__patern[i]!='.')
             and (self.__patern[i]!='(')
             and (self.__patern[i]!=')')
+            and (self.__patern[i]!='?')
             ):
                 if(self.__patern[i] not in self.__alphabets):
                     self.__alphabets.append(self.__patern[i])
@@ -102,7 +103,7 @@ class regularExpression:
             operation="~"
         
         ##print(arr)     
-        if((len(arr)==1)and ((arr[0][-1]=="*") or (arr[0][-1]=="+") )):
+        if((len(arr)==1)and ((arr[0][-1]=="*") or (arr[0][-1]=="+")  or (arr[0][-1]=="?"))):
             operation=arr[0][-1]
             arr[0]=arr[0][:-1]
             #arr[0]=self.trail_brackets(arr[0])
@@ -124,11 +125,11 @@ class regularExpression:
                 if((self.__patern[i] in self.__alphabets)
                 and (self.__patern[i+1] in self.__alphabets)):
                     self.__mpat+="~";
-                elif(((self.__patern[i]=="*") or (self.__patern[i]=="+"))
+                elif(((self.__patern[i]=="*") or (self.__patern[i]=="+")  or (self.__patern[i]=="?"))
                 and (self.__patern[i+1] in self.__alphabets)):
                     self.__mpat+="~";
                 
-                elif(((self.__patern[i]=="*") or (self.__patern[i]=="+"))
+                elif(((self.__patern[i]=="*") or (self.__patern[i]=="+")  or (self.__patern[i]=="?"))
                 and (self.__patern[i+1]=="(")):
                     self.__mpat+="~";
                 
@@ -193,6 +194,13 @@ class regularExpression:
                     graph[self.__nfa_states+1][0].append(self.__nfa_steps[counter][2])
                     graph[self.__nfa_states+1][0].append(self.__nfa_states)
                     graph[self.__nfa_steps[counter][0]][0].append(self.__nfa_steps[counter][2])
+
+                if(split_arr[1]=="?"):
+                    graph[self.__nfa_steps[counter][0]][0].append(self.__nfa_states)
+                    graph[self.__nfa_states+1][0].append(self.__nfa_steps[counter][2])
+                    #graph[self.__nfa_states+1][0].append(self.__nfa_states)
+                    graph[self.__nfa_steps[counter][0]][0].append(self.__nfa_steps[counter][2])
+
                 if(split_arr[0][i] in self.__alphabets):
                     #print(split_arr[0][i],self.__nfa_states)
                     graph[self.__nfa_states][self.__alphabets.index(split_arr[0][i])].append(self.__nfa_states+1);
@@ -242,9 +250,11 @@ class regularExpression:
 
 if __name__=="__main__":
     clearConsole()
-    r=regularExpression("int|float")
+    r=regularExpression("(ca)*b")
     #r.printNFA()
     #r.printDFA()
-    print(r.examine("intf"))
+    print(r.examine("b"))
+    print(r.examine("cab"))
+    print(r.examine("cacab"))
     #r=regularExpression("((ab)*)")
 
