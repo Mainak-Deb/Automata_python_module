@@ -1,2 +1,1 @@
-r.printNFA()
-    print(r.examine("bababbabadd"))
+                    # print(check_string,regex[i][1].examine(check_string))

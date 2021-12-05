@@ -242,9 +242,9 @@ class regularExpression:
 
 if __name__=="__main__":
     clearConsole()
-    r=regularExpression("(el)*(if|se)")
-    # r.printNFA()
-    # r.printDFA()
-    print(r.examine("elelelelse"))
+    r=regularExpression("int|float")
+    #r.printNFA()
+    #r.printDFA()
+    print(r.examine("intf"))
     #r=regularExpression("((ab)*)")
 
